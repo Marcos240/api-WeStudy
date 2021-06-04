@@ -5,10 +5,9 @@ const examController = require('../app/controllers/ExamController.js');
 
 router.post('/create', examController.create);
 router.get('', examController.getAll);
+router.get('/:id', examController.get);
 router.get('/:id/edit', examController.edit);
 router.put('/:id', examController.update);
-router.patch('/:id/restore', examController.restore);
-router.delete('/:id', examController.destroy);
-router.delete('/:id/force', examController.forceDestroy);
+router.delete('/:id', examController.delete);
 
 module.exports = router;

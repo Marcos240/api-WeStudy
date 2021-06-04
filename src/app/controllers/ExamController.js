@@ -1,77 +1,114 @@
 const Exam = require('../models/Exam');
-const { mongooseToObject } = require('../../until/mongoose');
+const { mongooseToObject } = require('../../untils/mongoose');
 
 class ExamController {
     // [GET] /exams
-    getAll(req, res, next) {
-        Exam.find({})
-            .then((exam) =>{
-                    res.json(exam);
-                }
-            )
-            .catch(next);
+    getAll(req, res) {
+        Exam.find().exec((err, exams) => {
+            if (err) {
+                res.status(500).send({ status: 'fail', message: err });
+                return;
+            }
+            res.status(200).send({
+                status: 'success',
+                data: exams
+            });
+        });
+    }
+
+    // [GET] /exams/:id
+    async get(req, res) {
+        // find a exam by id:
+        const exam = await Exam.findById(req.params.id);
+        // check if result is null:
+        if (!exam) {
+            res.status(404).json({ status: 'fail',message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            return;
+        }
+        Exam.findById(req.params.id).exec((err, exam) => {
+            if (err) {
+                res.status(500).send({ status: 'fail', message: err });
+                return;
+            }
+            res.status(200).send({
+                status: 'success',
+                data: exam
+            });
+        });
     }
 
     // [POST] /exams/create
-    create(req, res, next) {
-        const exam = new Exam(req.body);
-    
+    create(req, res) {
+        const exam = new Exam(req.body);    
         exam.save((err, exam) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
-            res.send({ status: 'success', message: "Add exam successfully!" });            
+            res.send({ status: 'success', message: "Add exam successfully!", data: exam });            
         });
     }
 
-    // [POST] /exams/store
-    store(req, res, next) {
-        req.body.image = `https://img.youtube.com/vi/${req.body.videoId}/sddefault.jpg`;
-        const exam = new Exam(req.body);
-        exam
-            .save()
-            .then(() => res.redirect('/me/stored/exams'))
-            .catch((error) => {});
-    }
-
     // [GET] /exams/:id/edit
-    edit(req, res, next) {
-        Exam.findById(req.params.id)
-            .then((exam) =>
-                res.render('exams/edit', {
-                    exam: mongooseToObject(exam),
-                }),
-            )
-            .catch(next);
+    async edit(req, res) {
+        // find a exam by id:
+        const exam = await Exam.findById(req.params.id);
+        // check if result is null:
+        if (!exam) {
+            res.status(404).json({status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            return;
+        }
+        Exam.findById(req.params.id).exec((err, exam) => {
+            if (err) {
+                res.status(500).send({ status: 'fail', message: err });
+                return;
+            }
+            res.status(200).send({
+                status: 'success',
+                data: exam
+            });
+        });
     }
 
     // [PUT] /exams/:id
-    update(req, res, next) {
-        Exam.updateOne({ _id: req.params.id }, req.body)
-            .then(() => res.redirect('/me/stored/exams'))
-            .catch(next);
+    async update(req, res) {
+        // find a exam by id:
+        const exam = await Exam.findById(req.params.id);
+        // check if result is null:
+        if (!exam) {
+            res.status(404).json({status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            return;
+        }
+        Exam.updateOne({ _id: req.params.id }, req.body).exec((err) => {
+            if (err) {
+                res.status(500).send({ status: 'fail', message: err });
+                return;
+            }
+            res.status(200).send({
+                status: 'success',
+                data: req.body
+            });
+        });
     }
 
     // [DELETE] /exams/:id
-    destroy(req, res, next) {
-        Exam.delete({ _id: req.params.id })
-            .then(() => res.redirect('back'))
-            .catch(next);
-    }
-
-    // [DELETE] /exams/:id/force
-    forceDestroy(req, res, next) {
-        Exam.deleteOne({ _id: req.params.id })
-            .then(() => res.redirect('back'))
-            .catch(next);
-    }
-
-    // [PATCH] /exams/:id/restore
-    restore(req, res, next) {
-        Exam.restore({ _id: req.params.id })
-            .then(() => res.redirect('back'))
-            .catch(next);
+    async delete(req, res) {
+        // find a exam by id:
+        const exam = await Exam.findById(req.params.id);
+        // check if result is null:
+        if (!exam) {
+            res.status(404).json({ status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            return;
+        }
+        Exam.deleteOne({ _id: req.params.id }, ).exec((err) => {
+        if (err) {
+            res.status(500).send({ status: 'fail', message: err });
+            return;
+        }
+        res.status(200).send({
+            status: 'success'
+        });
+        });
     }
 }
 
