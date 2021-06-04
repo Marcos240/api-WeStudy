@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+//Đề thi
 const Exam = new Schema(
     {
         name: { type: String, required: true },

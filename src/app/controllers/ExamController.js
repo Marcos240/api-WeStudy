@@ -1,5 +1,5 @@
 const Exam = require('../models/Exam');
-const { mongooseToObject } = require('../../until/mongoose');
+const { mongooseToObject } = require('../../untils/mongoose');
 
 class ExamController {
     // [GET] /exams
@@ -22,7 +22,7 @@ class ExamController {
         const exam = await Exam.findById(req.params.id);
         // check if result is null:
         if (!exam) {
-            res.status(404).json({ message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            res.status(404).json({ status: 'fail',message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
             return;
         }
         Exam.findById(req.params.id).exec((err, exam) => {
@@ -55,7 +55,7 @@ class ExamController {
         const exam = await Exam.findById(req.params.id);
         // check if result is null:
         if (!exam) {
-            res.status(404).json({ message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            res.status(404).json({status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
             return;
         }
         Exam.findById(req.params.id).exec((err, exam) => {
@@ -76,7 +76,7 @@ class ExamController {
         const exam = await Exam.findById(req.params.id);
         // check if result is null:
         if (!exam) {
-            res.status(404).json({ message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            res.status(404).json({status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
             return;
         }
         Exam.updateOne({ _id: req.params.id }, req.body).exec((err) => {
@@ -97,10 +97,10 @@ class ExamController {
         const exam = await Exam.findById(req.params.id);
         // check if result is null:
         if (!exam) {
-            res.status(404).json({ message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+            res.status(404).json({ status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
             return;
         }
-        Exam.deleteOne({ _id: req.params.id }).exec((err) => {
+        Exam.deleteOne({ _id: req.params.id }, ).exec((err) => {
         if (err) {
             res.status(500).send({ status: 'fail', message: err });
             return;
