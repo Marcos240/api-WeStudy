@@ -3,6 +3,8 @@ const router = express.Router();
 
 const examController = require('../app/controllers/ExamController.js');
 
+
+//Đề thi
 router.post('/create', examController.create);
 router.get('', examController.getAll);
 router.get('/:id', examController.get);

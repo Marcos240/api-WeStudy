@@ -1,6 +1,7 @@
 const TestExam = require('../models/TestExam');
 const { mongooseToObject } = require('../../untils/mongoose');
-
+var mongoose = require('mongoose');
+//Đề thi thử
 class TestExamController {
     // [GET] /testExams
     getAll(req, res) {
@@ -31,23 +32,25 @@ class TestExamController {
 
     // [GET] /testExams/:id
     async get(req, res) {
-        // find a testExam by id:
-        const testExam = await TestExam.findById(req.params.id);
-        // check if result is null:
-        if (!testExam) {
-            res.status(404).json({ status: 'fail',message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+        //kiểm tra tính hợp lệ của id            
+        if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
+        {
+            res.status(404).json({ status: 'fail', message: 'id is not a valid ObjectId' });
             return;
         }
-        TestExam.findById(req.params.id).exec((err, testExam) => {
-            if (err) {
-                res.status(500).send({ status: 'fail', message: err });
-                return;
-            }
-            res.status(200).send({
-                status: 'success',
-                data: testExam
+        else
+        {
+            TestExam.findById(req.params.id).exec((err, testExam) => {
+                if (err) {
+                    res.status(500).send({ status: 'fail', message: err });
+                    return;
+                }
+                res.status(200).send({
+                    status: 'success',
+                    data: testExam
+                });
             });
-        });
+        }
     }
 
     // [POST] /testExams/create
@@ -64,64 +67,70 @@ class TestExamController {
 
     // [GET] /testExams/:id/edit
     async edit(req, res) {
-        // find a testExam by id:
-        const testExam = await TestExam.findById(req.params.id);
-        // check if result is null:
-        if (!testExam) {
-            res.status(404).json({status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+        //kiểm tra tính hợp lệ của id            
+        if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
+        {
+            res.status(404).json({ status: 'fail', message: 'id is not a valid ObjectId' });
             return;
         }
-        TestExam.findById(req.params.id).exec((err, testExam) => {
-            if (err) {
-                res.status(500).send({ status: 'fail', message: err });
-                return;
-            }
-            res.status(200).send({
-                status: 'success',
-                data: testExam
+        else
+        {
+            TestExam.findById(req.params.id).exec((err, testExam) => {
+                if (err) {
+                    res.status(500).send({ status: 'fail', message: err });
+                    return;
+                }
+                res.status(200).send({
+                    status: 'success',
+                    data: testExam
+                });
             });
-        });
+        }
     }
 
     // [PUT] /testExams/:id
     async update(req, res) {
-        // find a testExam by id:
-        const testExam = await TestExam.findById(req.params.id);
-        // check if result is null:
-        if (!testExam) {
-            res.status(404).json({status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
+        //kiểm tra tính hợp lệ của id            
+        if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
+        {
+            res.status(404).json({ status: 'fail', message: 'id is not a valid ObjectId' });
             return;
         }
-        TestExam.updateOne({ _id: req.params.id }, req.body).exec((err) => {
+        else
+        {
+            TestExam.updateOne({ _id: req.params.id }, req.body).exec((err) => {
+                if (err) {
+                    res.status(500).send({ status: 'fail', message: err });
+                    return;
+                }
+                res.status(200).send({
+                    status: 'success',
+                    data: req.body
+                });
+            });
+        }
+    }
+
+    // [DELETE] /testExams/:id
+    async delete(req, res) {
+        //kiểm tra tính hợp lệ của id            
+        if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
+        {
+            res.status(404).json({ status: 'fail', message: 'id is not a valid ObjectId' });
+            return;
+        }
+        else
+        {
+            TestExam.deleteOne({ _id: req.params.id }, ).exec((err) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
             res.status(200).send({
-                status: 'success',
-                data: req.body
+                status: 'success'
             });
-        });
-    }
-
-    // [DELETE] /testExams/:id
-    async delete(req, res) {
-        // find a testExam by id:
-        const testExam = await TestExam.findById(req.params.id);
-        // check if result is null:
-        if (!testExam) {
-            res.status(404).json({ status: 'fail', message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
-            return;
+            });
         }
-        TestExam.deleteOne({ _id: req.params.id }, ).exec((err) => {
-        if (err) {
-            res.status(500).send({ status: 'fail', message: err });
-            return;
-        }
-        res.status(200).send({
-            status: 'success'
-        });
-        });
     }
 }
 
