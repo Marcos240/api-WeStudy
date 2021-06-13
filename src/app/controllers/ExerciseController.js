@@ -1,36 +1,37 @@
-const TestExam = require('../models/TestExam');
+const Exercise = require('../models/Exercise');
 const { mongooseToObject } = require('../../untils/mongoose');
 var mongoose = require('mongoose');
-//Đề thi thử
-class TestExamController {
-    // [GET] /testExams
+//Phiếu bài tập trắc nghiệm
+class ExerciseController {
+    // [GET] /excercises
     getAll(req, res) {
-        TestExam.find().exec((err, testExams) => {
+        Exercise.find().exec((err, excercises) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
             res.status(200).send({
                 status: 'success',
-                data: testExams
+                data: excercises
             });
         });
     }
-    // [GET] /:id/questions
+    // [GET] /:id/allQuestion
      getAllQuestion(req, res) {
-        TestExam.findById(req.params.id).populate('questions').exec((err, testExams) => {
+        Exercise.findById(req.params.id).populate('questions').exec((err, excercises) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
             res.status(200).send({
                 status: 'success',
-                data: testExams
+                data: excercises
             });
         });
+            
     }
 
-    // [GET] /testExams/:id
+    // [GET] /excercises/:id
     async get(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -40,32 +41,32 @@ class TestExamController {
         }
         else
         {
-            TestExam.findById(req.params.id).exec((err, testExam) => {
+            Exercise.findById(req.params.id).exec((err, exercise) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
                 }
                 res.status(200).send({
                     status: 'success',
-                    data: testExam
+                    data: exercise
                 });
             });
         }
     }
 
-    // [POST] /testExams/create
+    // [POST] /excercises/create
     create(req, res) {
-        const testExam = new TestExam(req.body);    
-        testExam.save((err, testExam) => {
+        const exercise = new Exercise(req.body);    
+        exercise.save((err, exercise) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
-            res.send({ status: 'success', message: "Add testExam successfully!", data: testExam });            
+            res.send({ status: 'success', message: "Add exercise successfully!", data: exercise });            
         });
     }
 
-    // [GET] /testExams/:id/edit
+    // [GET] /excercises/:id/edit
     async edit(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -75,20 +76,20 @@ class TestExamController {
         }
         else
         {
-            TestExam.findById(req.params.id).exec((err, testExam) => {
+            Exercise.findById(req.params.id).exec((err, exercise) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
                 }
                 res.status(200).send({
                     status: 'success',
-                    data: testExam
+                    data: exercise
                 });
             });
         }
     }
 
-    // [PUT] /testExams/:id
+    // [PUT] /excercises/:id
     async update(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -98,7 +99,7 @@ class TestExamController {
         }
         else
         {
-            TestExam.updateOne({ _id: req.params.id }, req.body).exec((err) => {
+            Exercise.updateOne({ _id: req.params.id }, req.body).exec((err) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -111,7 +112,7 @@ class TestExamController {
         }
     }
 
-    // [DELETE] /testExams/:id
+    // [DELETE] /excercises/:id
     async delete(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -121,7 +122,7 @@ class TestExamController {
         }
         else
         {
-            TestExam.deleteOne({ _id: req.params.id }, ).exec((err) => {
+            Exercise.deleteOne({ _id: req.params.id }, ).exec((err) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
@@ -134,4 +135,4 @@ class TestExamController {
     }
 }
 
-module.exports = new TestExamController();
+module.exports = new ExerciseController();

@@ -1,25 +1,25 @@
-const Question = require('../models/Question');
-const TestExam = require('../models/TestExam');
+const QuestionExercise = require('../models/QuestionExercise');
+const Exercise = require('../models/Exercise');
 const { mongooseToObject } = require('../../untils/mongoose');
 var mongoose = require('mongoose');
 
 //Câu hỏi trong đề thi thử
-class QuestionController {
-    // [GET] /questions
+class QuestionExerciseController {
+    // [GET] /questionExercises
     getAll(req, res) {
-        Question.find().exec((err, questions) => {
+        QuestionExercise.find().exec((err, questionExercises) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
             res.status(200).send({
                 status: 'success',
-                data: questions
+                data: questionExercises
             });
         });
     }
 
-    // [GET] /questions/:id
+    // [GET] /questionExercises/:id
     async get(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -29,13 +29,13 @@ class QuestionController {
         }
         else
         {
-            const question = await Question.findById(req.params.id);
+            const question = await QuestionExercise.findById(req.params.id);
             // check if result is null:
             if (!question) {
                 res.status(404).json({ status: 'fail',message: 'Không tìm thấy dữ liệu nào với id ' + req.params.id });
                 return;
             }
-            Question.findById(req.params.id).exec((err, question) => {
+            QuestionExercise.findById(req.params.id).exec((err, question) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -48,32 +48,32 @@ class QuestionController {
           }
     }
 
-    // [POST] /questions/create
+    // [POST] /questionExercises/create
     async create(req, res) {        
         //kiểm tra tính hợp lệ của id            
-        if( !mongoose.Types.ObjectId.isValid(req.params.testExamId) ) 
+        if( !mongoose.Types.ObjectId.isValid(req.params.exerciseId) ) 
         {
             res.status(404).json({ status: 'fail', message: 'id is not a valid ObjectId' });
             return;
         }
         else
         {
-            const newQuestion = new Question(req.body);
-            const testExam = await TestExam.findById(req.params.testExamId);
-            newQuestion.owner = testExam;
-            testExam.questions.push(newQuestion._id);
-            await testExam.save();
-            newQuestion.save((err, newQuestion) => {
+            const newQuestionExercise = new QuestionExercise(req.body);
+            const exercise = await Exercise.findById(req.params.exerciseId);
+            newQuestionExercise.owner = exercise;
+            exercise.questions.push(newQuestionExercise._id);
+            await exercise.save();  
+            newQuestionExercise.save((err, newQuestionExercise) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
                 }
-                res.send({ status: 'success', message: "Add new question successfully!", data: newQuestion });            
+                res.send({ status: 'success', message: "Add new question successfully!", data: newQuestionExercise });            
             });     
         }  
     }
 
-    // [GET] /questions/:id/edit
+    // [GET] /questionExercises/:id/edit
     async edit(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -84,8 +84,8 @@ class QuestionController {
         else
         {
             // find a question by id:
-            const question = await Question.findById(req.params.id);
-            Question.findById(req.params.id).exec((err, question) => {
+            const question = await QuestionExercise.findById(req.params.id);
+            QuestionExercise.findById(req.params.id).exec((err, question) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -98,7 +98,7 @@ class QuestionController {
         }
     }
 
-    // [PUT] /questions/:id
+    // [PUT] /questionExercises/:id
     async update(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -108,7 +108,7 @@ class QuestionController {
         }
         else
         {
-            Question.updateOne({ _id: req.params.id }, req.body).exec((err) => {
+            QuestionExercise.updateOne({ _id: req.params.id }, req.body).exec((err) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -121,7 +121,7 @@ class QuestionController {
         }
     }
 
-    // [DELETE] /questions/:id
+    // [DELETE] /questionExercises/:id
     async delete(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -131,11 +131,11 @@ class QuestionController {
         }
         else
         {
-            const question = await Question.findById(req.params.id);
-            const testExam = await TestExam.findById(question.owner);
-            testExam.questions.pop(testExam._id);
-            await testExam.save();
-            Question.deleteOne({ _id: req.params.id }, ).exec((err) => {
+            const question = await QuestionExercise.findById(req.params.id);
+            const exercise = await Exercise.findById(question.owner);
+            exercise.questions.pull(exercise._id);
+            await exercise.save();
+            QuestionExercise.deleteOne({ _id: req.params.id }, ).exec((err) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
@@ -148,4 +148,4 @@ class QuestionController {
     }
 }
 
-module.exports = new QuestionController();
+module.exports = new QuestionExerciseController();

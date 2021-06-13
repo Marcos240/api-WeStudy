@@ -28,15 +28,37 @@ class TestRegisterController {
         }
     }
 
+    // [GET] /testRegisters/:userId/getAll
+    async getAll(req, res) {
+        //kiểm tra tính hợp lệ của id            
+        if( !mongoose.Types.ObjectId.isValid(req.params.userId) ) 
+        {
+            res.status(404).json({ status: 'fail', message: 'id is not a valid ObjectId' });
+            return;
+        }
+        else
+        {
+            TestRegister.find({owner: req.params.userId}).exec((err, testRegister) => {
+                if (err) {
+                    res.status(500).send({ status: 'fail', message: err });
+                    return;
+                }
+                res.status(200).send({
+                    status: 'success',
+                    data: testRegister
+                });
+            });
+        }
+    }
+
     // [POST] /testRegisters/create
     async create(req, res) {
         const newTestRegister = new TestRegister(req.body);
         const user = await User.findById(req.params.userId);
         newTestRegister.owner = user;
         user.testRegisters.push(newTestRegister._id);
-        await user.save();
-        const testRegister = new TestRegister(req.body);    
-        testRegister.save((err, testRegister) => {
+        await user.save(); 
+        newTestRegister.save((err, testRegister) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
@@ -55,15 +77,11 @@ class TestRegisterController {
         }
         else
         {
-            // //Xóa phiếu đăng ký khỏi danh sách đã đăng ký của User
-            // const testRegister = await TestRegister.findById(req.params.id);
-            // res.send(testRegister);
-            // const user = await User.findById(testRegister.owner);
-            // res.send(user);
-            // user.testRegisters.pop(testRegister._id);
-            // await user.save();
-            //Đang lỗi không lấy được idUser
-
+            //Xóa phiếu đăng ký khỏi danh sách đã đăng ký của User
+            const testRegister = await TestRegister.findById(req.params.id);
+            const user = await User.findById(testRegister.owner);
+            user.testRegisters.pull(testRegister._id);
+            await user.save();
             TestRegister.deleteOne({ _id: req.params.id }, ).exec((err) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });

@@ -8,7 +8,7 @@ const TestRegister = new Schema(
         testTime: { type: String , required: true},        
         testCode: { type: String , required: true},
         description: { type: String, required: true },
-        owner: { type: Schema.Types.ObjectId, ref: 'User' }
+        owner: { type: Schema.Types.ObjectId, ref: 'TestExam' }
     },
     {
         timestamps: true,
