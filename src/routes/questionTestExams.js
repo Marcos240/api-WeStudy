@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const questionController = require('../app/controllers/QuestionController.js');
+const questionController = require('../app/controllers/QuestionTestExamController.js');
 
-router.post('/create', questionController.create);
+//Câu hỏi trong đề thi thử
+router.post('/:testExamId/create', questionController.create);
 router.get('', questionController.getAll);
 router.get('/:id', questionController.get);
 router.get('/:id/edit', questionController.edit);

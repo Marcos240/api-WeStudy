@@ -1,23 +1,23 @@
-const Exam = require('../models/Exam');
+const Document = require('../models/Document');
 const { mongooseToObject } = require('../../untils/mongoose');
 var mongoose = require('mongoose');
-//Đề thi
-class ExamController {
-    // [GET] /exams
+//Phiếu tài liệu
+class DocumentController {
+    // [GET] /documents
     getAll(req, res) {
-        Exam.find().exec((err, exams) => {
+        Document.find().exec((err, documents) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
             res.status(200).send({
                 status: 'success',
-                data: exams
+                data: documents
             });
         });
     }
 
-    // [GET] /exams/:id
+    // [GET] /documents/:id
     async get(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -27,32 +27,32 @@ class ExamController {
         }
         else
         {
-            Exam.findById(req.params.id).exec((err, exam) => {
+            Document.findById(req.params.id).exec((err, document) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
                 }
                 res.status(200).send({
                     status: 'success',
-                    data: exam
+                    data: document
                 });
             });
         }
     }
 
-    // [POST] /exams/create
+    // [POST] /documents/create
     create(req, res) {
-        const exam = new Exam(req.body);    
-        exam.save((err, exam) => {
+        const document = new Document(req.body);    
+        document.save((err, document) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
-            res.send({ status: 'success', message: "Add exam successfully!", data: exam });            
+            res.send({ status: 'success', message: "Add document successfully!", data: document });            
         });
     }
 
-    // [GET] /exams/:id/edit
+    // [GET] /documents/:id/edit
     async edit(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -62,20 +62,20 @@ class ExamController {
         }
         else
         {
-            Exam.findById(req.params.id).exec((err, exam) => {
+            Document.findById(req.params.id).exec((err, document) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
                 }
                 res.status(200).send({
                     status: 'success',
-                    data: exam
+                    data: document
                 });
             });
         }
     }
 
-    // [PUT] /exams/:id
+    // [PUT] /documents/:id
     async update(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -85,7 +85,7 @@ class ExamController {
         }
         else
         {
-            Exam.updateOne({ _id: req.params.id }, req.body).exec((err) => {
+            Document.updateOne({ _id: req.params.id }, req.body).exec((err) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -98,7 +98,7 @@ class ExamController {
         }
     }
 
-    // [DELETE] /exams/:id
+    // [DELETE] /documents/:id
     async delete(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -108,7 +108,7 @@ class ExamController {
         }
         else
         {
-            Exam.deleteOne({ _id: req.params.id }, ).exec((err) => {
+            Document.deleteOne({ _id: req.params.id }, ).exec((err) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -121,4 +121,4 @@ class ExamController {
     }
 }
 
-module.exports = new ExamController();
+module.exports = new DocumentController();

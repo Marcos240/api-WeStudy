@@ -12,6 +12,8 @@ router.use(function(req, res, next) {
         next();
     })
 
+//Người dùng
+
 router.post('/signup', upload.single('image'), userController.signup);
 router.post('/signin', userController.signin);
 router.get('/current', authorize.verifyToken, userController.current);

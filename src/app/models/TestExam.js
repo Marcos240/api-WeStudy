@@ -9,7 +9,7 @@ const TestExam = new Schema(
         source: { type: String, required: true },
         testTime: { type: String , required: true},
         description: { type: String, required: true },        
-        questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }]
+        questions: [{ type: Schema.Types.ObjectId, ref: 'QuestionTestExam' }]
     },
     {
         timestamps: true,

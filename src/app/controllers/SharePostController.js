@@ -1,23 +1,23 @@
-const Exam = require('../models/Exam');
+const SharePost = require('../models/SharePost');
 const { mongooseToObject } = require('../../untils/mongoose');
 var mongoose = require('mongoose');
-//Đề thi
-class ExamController {
-    // [GET] /exams
+//Bài chia sẻ
+class SharePostController {
+    // [GET] /sharePosts
     getAll(req, res) {
-        Exam.find().exec((err, exams) => {
+        SharePost.find().exec((err, sharePosts) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
             res.status(200).send({
                 status: 'success',
-                data: exams
+                data: sharePosts
             });
         });
     }
 
-    // [GET] /exams/:id
+    // [GET] /sharePosts/:id
     async get(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -27,32 +27,32 @@ class ExamController {
         }
         else
         {
-            Exam.findById(req.params.id).exec((err, exam) => {
+            SharePost.findById(req.params.id).exec((err, sharePost) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
                 }
                 res.status(200).send({
                     status: 'success',
-                    data: exam
+                    data: sharePost
                 });
             });
         }
     }
 
-    // [POST] /exams/create
+    // [POST] /sharePosts/create
     create(req, res) {
-        const exam = new Exam(req.body);    
-        exam.save((err, exam) => {
+        const sharePost = new SharePost(req.body);    
+        sharePost.save((err, sharePost) => {
             if (err) {
                 res.status(500).send({ status: 'fail', message: err });
                 return;
             }
-            res.send({ status: 'success', message: "Add exam successfully!", data: exam });            
+            res.send({ status: 'success', message: "Add sharePost successfully!", data: sharePost });            
         });
     }
 
-    // [GET] /exams/:id/edit
+    // [GET] /sharePosts/:id/edit
     async edit(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -62,20 +62,20 @@ class ExamController {
         }
         else
         {
-            Exam.findById(req.params.id).exec((err, exam) => {
+            SharePost.findById(req.params.id).exec((err, sharePost) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
                 }
                 res.status(200).send({
                     status: 'success',
-                    data: exam
+                    data: sharePost
                 });
             });
         }
     }
 
-    // [PUT] /exams/:id
+    // [PUT] /sharePosts/:id
     async update(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -85,7 +85,7 @@ class ExamController {
         }
         else
         {
-            Exam.updateOne({ _id: req.params.id }, req.body).exec((err) => {
+            SharePost.updateOne({ _id: req.params.id }, req.body).exec((err) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -98,7 +98,7 @@ class ExamController {
         }
     }
 
-    // [DELETE] /exams/:id
+    // [DELETE] /sharePosts/:id
     async delete(req, res) {
         //kiểm tra tính hợp lệ của id            
         if( !mongoose.Types.ObjectId.isValid(req.params.id) ) 
@@ -108,7 +108,7 @@ class ExamController {
         }
         else
         {
-            Exam.deleteOne({ _id: req.params.id }, ).exec((err) => {
+            SharePost.deleteOne({ _id: req.params.id }, ).exec((err) => {
                 if (err) {
                     res.status(500).send({ status: 'fail', message: err });
                     return;
@@ -121,4 +121,4 @@ class ExamController {
     }
 }
 
-module.exports = new ExamController();
+module.exports = new SharePostController();

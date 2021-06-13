@@ -4,7 +4,9 @@ var path = require('path');
 const User = require('../models/User');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
+var mongoose = require('mongoose');
 
+//Người dùng
 exports.signup = (req, res) => {
     User.findOne({
         username: req.body.username
