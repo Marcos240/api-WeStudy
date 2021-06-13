@@ -5,6 +5,8 @@ const usersRouter = require('./users');
 const testRegistersRouter = require('./testRegisters');
 const exercisesRouter = require('./excercises')
 const questionExercisesRouter = require('./questionExercises');
+const documentsRouter = require('./documents');
+const sharePostsRouter = require('./sharePosts');
 
 function route(app) {
     app.use('/exams', examsRouter);
@@ -14,6 +16,9 @@ function route(app) {
     app.use('/testRegisters', testRegistersRouter);
     app.use('/exercises', exercisesRouter);
     app.use('/questionExercises', questionExercisesRouter);
+    app.use('/documents', documentsRouter);
+    app.use('/sharePosts', sharePostsRouter);
+
 }
 
 module.exports = route;
